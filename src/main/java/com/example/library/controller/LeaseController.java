@@ -29,6 +29,7 @@ public class LeaseController {
     public Lease getLeaseById(Long id) {
         Optional<Lease> lease = leaseService.getLeaseById(id);
         return lease.orElse(null);
+        //stagod
     }
 
     @GetMapping("/copy")
