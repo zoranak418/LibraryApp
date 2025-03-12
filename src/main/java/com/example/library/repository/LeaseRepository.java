@@ -21,6 +21,9 @@ public interface LeaseRepository extends JpaRepository<Lease, Long> {
     @Query("select l from Lease l where l.copy.book.id =:idBook")
     public List<Lease> findByBook(@Param("idBook")Long idBook);
 
+    @Query("SELECT l FROM Lease l WHERE l.copy.book.id = :idBook AND CAST(l.toDate AS DATE) > CURRENT_DATE ")
+    public List<Lease> findByBookActive(@Param("idBook") Long idBook);
+
     @Query("select l from Lease l where l.user.id = :idUser")
     public List<Lease> findByUser(@Param("idUser")Long idUser);
 }

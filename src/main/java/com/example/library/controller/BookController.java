@@ -43,6 +43,12 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/{id}/status")
+    public Long isAvailable(@PathVariable Long id) {
+
+        return bookService.isAvailable(id);
+    }
+
     @PostMapping
     public Book createBook(@RequestBody CreateBookRequest createBookRequest) {
         return bookService.saveBook(createBookRequest);

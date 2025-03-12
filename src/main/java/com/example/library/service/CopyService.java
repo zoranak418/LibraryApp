@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,10 +39,17 @@ public class CopyService {
         return copyRepository.findById(id);
     }
 
-    public Copy saveCopy(CreateCopyRequest copyRequest) {
+    public List<Copy> saveCopy(CreateCopyRequest copyRequest) {
         Book book = bookRepository.findById(copyRequest.getBook()).get();
-        Copy savedCopy = DtoMapper.createCopyRequestToCopy(copyRequest, book);
-        return copyRepository.save(savedCopy);
+        Long count = copyRequest.getCount();
+        List<Copy> copies = new ArrayList<>();
+
+        while(count > 0) {
+            Copy savedCopy = copyRepository.save(DtoMapper.createCopyRequestToCopy(copyRequest, book));
+            copies.add(savedCopy);
+            count --;
+        }
+        return copies;
     }
 
 

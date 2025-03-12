@@ -4,7 +4,10 @@ import com.example.library.dto.CreateBookRequest;
 import com.example.library.dto.UpdateBookRequest;
 import com.example.library.mapper.DtoMapper;
 import com.example.library.model.Book;
+import com.example.library.model.Lease;
 import com.example.library.repository.BookRepository;
+import com.example.library.repository.CopyRepository;
+import com.example.library.repository.LeaseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +21,8 @@ import java.util.Optional;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final LeaseRepository leaseRepository;
+    private final CopyRepository copyRepository;
 
     public List<Book> getAllBooks(){
         return bookRepository.findAll();
@@ -35,6 +40,17 @@ public class BookService {
         Book savedBook = DtoMapper.createBookRequestToBook(createBookRequest);
         return bookRepository.save(savedBook);
     }
+
+    public Long isAvailable(Long id ) {
+        List<Lease> leases = leaseRepository.findByBookActive(id);
+        System.out.println(leases);
+//        if(leases.size() == copyRepository.findByBookId(id).size())
+//            return Long.valueOf(0);
+//        System.out.println(leases);
+//        return Long.valueOf(copyRepository.findByBookId(id).size()) - leases.size();
+        return Long.valueOf(0);
+    }
+
 
     public Book updateBook(UpdateBookRequest updateBookRequest, Book book) {
         if(updateBookRequest.getTitle() != null) {

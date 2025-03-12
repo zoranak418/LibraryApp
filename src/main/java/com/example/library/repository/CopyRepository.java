@@ -11,4 +11,6 @@ import java.util.List;
 public interface CopyRepository extends JpaRepository<Copy, Long> {
 
     public List<Copy> findByBook(Book book);
+
+    public List<Copy> findByBookId(Long idBook);
 }

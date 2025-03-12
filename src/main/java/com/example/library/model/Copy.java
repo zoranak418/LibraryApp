@@ -21,6 +21,7 @@ public class Copy {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+
     @ManyToOne
     @JsonManagedReference
     @JoinColumn(name = "bookId", referencedColumnName = "id", nullable = false)

@@ -32,7 +32,7 @@ public class CopyController {
     }
 
     @PostMapping("/create")
-    public Copy createCopy(@RequestBody CreateCopyRequest createCopyRequest) {
+    public List<Copy> createCopy(@RequestBody CreateCopyRequest createCopyRequest) {
         return copyService.saveCopy(createCopyRequest);
     }
 

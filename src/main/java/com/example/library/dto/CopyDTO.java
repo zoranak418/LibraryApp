@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CopyDTO {
     private Long id;
-
+    private Long count;
 }
