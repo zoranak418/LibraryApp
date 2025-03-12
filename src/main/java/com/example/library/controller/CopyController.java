@@ -1,9 +1,14 @@
 package com.example.library.controller;
 
 
+import com.example.library.dto.CreateCopyRequest;
+import com.example.library.dto.UpdateBookRequest;
+import com.example.library.dto.UpdateCopyRequest;
+import com.example.library.model.Book;
 import com.example.library.model.Copy;
 import com.example.library.service.CopyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,10 +31,11 @@ public class CopyController {
         return copyService.getCopyById(id);
     }
 
-    @PostMapping
-    public Copy createCopy(@RequestBody Copy copy) {
-        return copyService.saveCopy(copy);
+    @PostMapping("/create")
+    public Copy createCopy(@RequestBody CreateCopyRequest createCopyRequest) {
+        return copyService.saveCopy(createCopyRequest);
     }
+
 
     @DeleteMapping("/{id}")
     public void deleteCopy(@PathVariable Long id) {

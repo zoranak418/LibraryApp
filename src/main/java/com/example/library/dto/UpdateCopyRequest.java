@@ -10,11 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegisterRequest {
-    private String username;
-    private String password;
-    private String email;
-    private Long role;
-    private String name;
-    private String surname;
+public class UpdateCopyRequest {
+    private Long book;
+    private Long count;
 }

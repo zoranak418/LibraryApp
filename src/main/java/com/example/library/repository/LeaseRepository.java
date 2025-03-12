@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface LeaseRepository extends JpaRepository<Lease, Long> {
 
-    public List<Lease> findByUser(User user);
     public List<Lease> findByCopy(Copy copy);
     public List<Lease> findByCopyId(Long id);
     public List<Lease> findByUserAndCopy(User user, Copy copy);
@@ -21,4 +20,7 @@ public interface LeaseRepository extends JpaRepository<Lease, Long> {
 
     @Query("select l from Lease l where l.copy.book.id =:idBook")
     public List<Lease> findByBook(@Param("idBook")Long idBook);
+
+    @Query("select l from Lease l where l.user.id = :idUser")
+    public List<Lease> findByUser(@Param("idUser")Long idUser);
 }

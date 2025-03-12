@@ -1,6 +1,6 @@
 package com.example.library.dto;
 
-
+import com.example.library.model.Book;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,11 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegisterRequest {
-    private String username;
-    private String password;
-    private String email;
-    private Long role;
-    private String name;
-    private String surname;
+public class CreateCopyRequest {
+    private Long book;
+    private Long count;
 }

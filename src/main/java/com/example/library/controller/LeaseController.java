@@ -1,6 +1,7 @@
 package com.example.library.controller;
 
 
+import com.example.library.dto.CreateLeaseRequest;
 import com.example.library.model.Book;
 import com.example.library.model.Lease;
 import com.example.library.model.User;
@@ -21,15 +22,13 @@ public class LeaseController {
 
     @GetMapping
     public List<Lease> getAllLeases() {
-        List<Lease> ls = leaseService.getAllLeases();
-        return ls;
+        return leaseService.getAllLeases();
     }
 
     @GetMapping("/{id}")
-    public Lease getLeaseById(Long id) {
+    public Lease getLeaseById(@PathVariable Long id) {
         Optional<Lease> lease = leaseService.getLeaseById(id);
         return lease.orElse(null);
-        //stagod
     }
 
     @GetMapping("/copy")
@@ -37,9 +36,9 @@ public class LeaseController {
         return leaseService.getLeasesByCopyId(id);
     }
 
-    @GetMapping("/user")
-    public List<Lease> getLeaseByUser(@RequestParam User user) {
-        List<Lease> leases = leaseService.getLeasesByUser(user);
+    @GetMapping("/users/{id}")
+    public List<Lease> getLeaseByUser(@PathVariable Long id) {
+        List<Lease> leases = leaseService.getLeasesByUser(id);
         return leases;
     }
 
@@ -48,15 +47,15 @@ public class LeaseController {
         return leaseService.getLeasesByBook(book);
     }
 
-    @PostMapping
-    public Lease createLease(@RequestBody Lease lease) {
-        return leaseService.createLease(lease);
+    @PostMapping("/create")
+    public Lease createLease(@RequestBody CreateLeaseRequest request) {
+        return leaseService.saveLease(request);
     }
 
 
     @DeleteMapping("/{id}")
     public void deleteLease(@PathVariable Long id) {
-        leaseService.deleteLease(id);
+        leaseService.deleteLeaseById(id);
     }
 
 

@@ -9,5 +9,9 @@ public enum Genre {
     SCIFI,
     HORROR,
     HISTORY,
-    HUMOR
+    HUMOR,
+    POETRY,
+    NOVEL,
+    ESSAY,
+    FICTION
 }

@@ -1,5 +1,7 @@
 package com.example.library.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,9 +22,11 @@ public class Copy {
     private Long id;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "bookId", referencedColumnName = "id", nullable = false)
     private Book book;
 
     @OneToMany(mappedBy = "copy")
+    @JsonBackReference
     private List<Lease> leases;
 }

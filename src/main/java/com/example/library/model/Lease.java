@@ -31,10 +31,12 @@ public class Lease {
     private String comments;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     private User user;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
     private Copy copy;
 

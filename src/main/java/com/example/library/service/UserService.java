@@ -1,8 +1,11 @@
 // User service
 package com.example.library.service;
 
+import com.example.library.dto.UpdateBookRequest;
+import com.example.library.dto.UpdateUserRequest;
 import com.example.library.dto.UserRegisterRequest;
 import com.example.library.mapper.DtoMapper;
+import com.example.library.model.Book;
 import com.example.library.model.Role;
 import com.example.library.model.User;
 import com.example.library.repository.RoleRepository;
@@ -30,12 +33,35 @@ public class UserService {
     }
 
     public User saveUser(UserRegisterRequest userRegisterRequest) {
+        Role role = roleRepository.findById(userRegisterRequest.getRole()).orElse(null);
         User user = DtoMapper.registerRequestToUser(userRegisterRequest);
-        Role role = roleRepository.findById(userRegisterRequest.getRoleId()).orElse(null);
-        System.out.println(role);
         user.setRole(role);
         return userRepository.save(user);
     }
+
+    public User updateUser(UpdateUserRequest updateUserRequest, User user) {
+        if(updateUserRequest.getUsername() != null) {
+            user.setUsername(updateUserRequest.getUsername());
+        }
+        if(updateUserRequest.getPassword() != null) {
+            user.setPassword(updateUserRequest.getPassword());
+        }
+        if(updateUserRequest.getEmail() != null) {
+            user.setEmail(updateUserRequest.getEmail());
+        }
+        if(updateUserRequest.getRole() != null) {
+            user.setRole(roleRepository.findById(updateUserRequest.getRole()).orElse(null));
+        }
+        if(updateUserRequest.getName() != null) {
+            user.setName(updateUserRequest.getName());
+        }
+        if(updateUserRequest.getSurname() != null) {
+            user.setSurname(updateUserRequest.getSurname());
+        }
+        userRepository.save(user);
+        return user;
+    }
+
 
     public User deleteUserById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);

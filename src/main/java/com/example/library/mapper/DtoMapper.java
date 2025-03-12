@@ -1,15 +1,14 @@
 package com.example.library.mapper;
 
-import com.example.library.dto.CreateBookRequest;
-import com.example.library.dto.DeleteBookResponse;
-import com.example.library.dto.UserRegisterRequest;
-import com.example.library.model.Book;
-import com.example.library.model.User;
+import com.example.library.dto.*;
+import com.example.library.model.*;
+import com.example.library.repository.BookRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Component
 public class DtoMapper {
+
 
     public static User registerRequestToUser(UserRegisterRequest userRegisterRequest) {
         return User.builder()
@@ -21,11 +20,36 @@ public class DtoMapper {
                 .build();
     }
 
+    public static Book BookDTOToBook(BookDTO bookDTO) {
+        return Book.builder()
+                .title(bookDTO.getTitle())
+                .author(bookDTO.getAuthor())
+                .genre(bookDTO.getGenre())
+                .build();
+    }
+
     public static Book createBookRequestToBook(CreateBookRequest createBookRequest) {
         return Book.builder()
                 .title(createBookRequest.getTitle())
                 .author(createBookRequest.getAuthor())
                 .genre(createBookRequest.getGenre())
+                .build();
+    }
+
+    public static Lease createLeaseRequestToLease(CreateLeaseRequest createLeaseRequest, User user, Copy copy) {
+        return Lease.builder()
+                .fromDate(createLeaseRequest.getFromDate())
+                .toDate(createLeaseRequest.getToDate())
+                .comments(createLeaseRequest.getComments())
+                .copy(copy)
+                .user(user)
+                .build();
+
+    }
+
+    public static Copy createCopyRequestToCopy(CreateCopyRequest createCopyRequest, Book book) {
+        return Copy.builder()
+                .book(book)
                 .build();
     }
 
