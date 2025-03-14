@@ -4,6 +4,8 @@ import com.example.library.dto.CreateBookRequest;
 import com.example.library.dto.UpdateBookRequest;
 import com.example.library.mapper.DtoMapper;
 import com.example.library.model.Book;
+import com.example.library.model.Copy;
+import com.example.library.model.Genre;
 import com.example.library.model.Lease;
 import com.example.library.repository.BookRepository;
 import com.example.library.repository.CopyRepository;
@@ -28,8 +30,8 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Optional<Book> findById(Long id) {
-        return bookRepository.findById(id);
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).orElse(null);
     }
 
     public List<Book> getBooksByAuthor(String author){
@@ -37,18 +39,16 @@ public class BookService {
     }
 
     public Book saveBook(CreateBookRequest createBookRequest) {
-        Book savedBook = DtoMapper.createBookRequestToBook(createBookRequest);
+        Genre genre = createBookRequest.getGenre();
+        Book savedBook = DtoMapper.createBookRequestToBook(createBookRequest, genre);
         return bookRepository.save(savedBook);
     }
 
-    public Long isAvailable(Long id ) {
+    public  howManyAvailable(Long id) {
         List<Lease> leases = leaseRepository.findByBookActive(id);
-        System.out.println(leases);
-//        if(leases.size() == copyRepository.findByBookId(id).size())
-//            return Long.valueOf(0);
-//        System.out.println(leases);
-//        return Long.valueOf(copyRepository.findByBookId(id).size()) - leases.size();
-        return Long.valueOf(0);
+        Long numOfActiveCopies = (long) leases.size();
+        Long numOfCopies = (long) copyRepository.findByBookId(id).size();
+        return Long.valueOf(numOfCopies - numOfActiveCopies);
     }
 
 

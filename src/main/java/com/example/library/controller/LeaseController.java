@@ -31,9 +31,9 @@ public class LeaseController {
         return lease.orElse(null);
     }
 
-    @GetMapping("/copy")
+    @GetMapping("/copies/{id}")
     public List<Lease> getLeaseByCopyId(@PathVariable Long id) {
-        return leaseService.getLeasesByCopyId(id);
+        return leaseService.getLeasesByCopy(id);
     }
 
     @GetMapping("/users/{id}")
@@ -42,9 +42,9 @@ public class LeaseController {
         return leases;
     }
 
-    @GetMapping("/book")
-    public List<Lease> getLeasesByBook(Book book) {
-        return leaseService.getLeasesByBook(book);
+    @GetMapping("/books/{id}")
+    public List<Lease> getLeasesByBook(@PathVariable Long id) {
+        return leaseService.getLeasesByBook(id);
     }
 
     @PostMapping("/create")

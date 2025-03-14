@@ -28,11 +28,11 @@ public class DtoMapper {
                 .build();
     }
 
-    public static Book createBookRequestToBook(CreateBookRequest createBookRequest) {
+    public static Book createBookRequestToBook(CreateBookRequest createBookRequest, Genre genre) {
         return Book.builder()
                 .title(createBookRequest.getTitle())
                 .author(createBookRequest.getAuthor())
-                .genre(createBookRequest.getGenre())
+                .genre(genre)
                 .build();
     }
 
@@ -40,7 +40,7 @@ public class DtoMapper {
         return Lease.builder()
                 .fromDate(createLeaseRequest.getFromDate())
                 .toDate(createLeaseRequest.getToDate())
-                .comments(createLeaseRequest.getComments())
+                .comments(copy.getBook().getTitle() + ", " + copy.getBook().getAuthor() + ", kopija: " + copy.getId())
                 .copy(copy)
                 .user(user)
                 .build();

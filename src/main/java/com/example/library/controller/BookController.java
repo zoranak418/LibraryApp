@@ -37,16 +37,14 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        return bookService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Book getBookById(@PathVariable Long id) {
+        return bookService.getBookById(id);
     }
 
     @GetMapping("/{id}/status")
     public Long isAvailable(@PathVariable Long id) {
 
-        return bookService.isAvailable(id);
+        return bookService.howManyAvailable(id);
     }
 
     @PostMapping
@@ -56,23 +54,23 @@ public class BookController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody UpdateBookRequest updateBookRequest) {
-        if(!bookService.findById(id).isPresent()) {
+        if(bookService.getBookById(id) == null) {
             return ResponseEntity.notFound().build();
         }
-        Book book = bookService.findById(id).get();
+        Book book = bookService.getBookById(id);
         return ResponseEntity.ok(bookService.updateBook(updateBookRequest, book));
     }
 
     @DeleteMapping("/{id}")
     public DeleteBookResponse deleteBook(@PathVariable Long id) {
-        if(!bookService.findById(id).isPresent()) {
+        if(bookService.getBookById(id) == null) {
             return DeleteBookResponse.builder()
                     .title("")
                     .author("")
                     .message("Not found")
                     .build();
         }
-        Book book = bookService.findById(id).get();
+        Book book = bookService.getBookById(id);
         bookService.delete(id);
         return DtoMapper.deleteBookResponsetoBook(book);
     }

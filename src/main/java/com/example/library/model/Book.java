@@ -26,7 +26,7 @@ public class Book {
 
     private String author;
 
-    @Enumerated(value = STRING)
+    @Enumerated(EnumType.STRING)
     private Genre genre;
 
     @OneToMany(mappedBy = "book")

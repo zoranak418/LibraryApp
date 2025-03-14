@@ -5,13 +5,19 @@ public enum Genre {
     ACTION,
     TRAGEDY,
     COMEDY,
+    CLASSIC,
     ROMANCE,
     SCIFI,
+    SCIENCE,
     HORROR,
     HISTORY,
     HUMOR,
     POETRY,
     NOVEL,
     ESSAY,
-    FICTION
+    FICTION,
+    PSYCHOLOGY,
+    PSYCHOLOGICAL_FICTION,
+    DYSTOPIAN,
+    ADVENTURE
 }

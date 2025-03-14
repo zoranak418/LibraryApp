@@ -31,7 +31,7 @@ public class LeaseService {
         return leaseRepository.findAll();
     }
 
-    public Optional<Lease> getLeaseById(long id) {
+    public Optional<Lease> getLeaseById(Long id) {
         return leaseRepository.findById(id);
     }
 
@@ -39,14 +39,12 @@ public class LeaseService {
         return leaseRepository.findByUser(id);
     }
 
-    public List<Lease> getLeasesByBook(Book book) { return leaseRepository.findByBook(book.getId()); }
+    public List<Lease> getLeasesByBook(Long id) {
+        return leaseRepository.findByBook(id); }
 
-    public List<Lease> getLeasesByCopy(Copy copy) {
+    public List<Lease> getLeasesByCopy(Long id) {
+        Copy copy = copyRepository.findById(id).orElse(null);
         return leaseRepository.findByCopy(copy);
-    }
-
-    public List<Lease> getLeasesByCopyId(long id) {
-        return leaseRepository.findByCopyId(id);
     }
 
     public Lease saveLease(CreateLeaseRequest request) {
