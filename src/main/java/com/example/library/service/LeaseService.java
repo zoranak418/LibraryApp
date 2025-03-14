@@ -83,7 +83,7 @@ public class LeaseService {
         Long available = bookService.howManyAvailableLong(copy.getBook().getId().longValue());
         if(available <= 0) {
             return null;
-            //todo exceptions 
+            //todo exceptions
         }
         Lease savedLease = DtoMapper.createLeaseRequestToLease(request, user, copy);
         return DtoMapper.createLeaseToLeaseResponse(leaseRepository.save(savedLease));
