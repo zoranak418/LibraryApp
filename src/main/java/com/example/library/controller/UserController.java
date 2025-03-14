@@ -36,13 +36,13 @@ public class UserController {
     }
 
     @GetMapping("/names/{name}")
-    @Operation(summary = "Get users by name", description = "Retrieve a list of users with search name")
+    @Operation(summary = "Get users by name", description = "Retrieve a list of users search by name")
     public List<UserResponse> getUserByName(@PathVariable String name) {
         return userService.getUsersByName(name);
     }
 
     @GetMapping("/surnames/{surname}")
-    @Operation(summary = "Get users by surname", description = "Retrieve a list of users with search surname")
+    @Operation(summary = "Get users by surname", description = "Retrieve a list of users search by surname")
     public List<UserResponse> getUserBySurname(@PathVariable String surname) {
         return userService.getUsersBySurname(surname);
     }
