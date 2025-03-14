@@ -4,7 +4,9 @@ package com.example.library.controller;
 import com.example.library.dto.UpdateBookRequest;
 import com.example.library.dto.UpdateUserRequest;
 import com.example.library.dto.UserRegisterRequest;
+import com.example.library.dto.UserResponse;
 import com.example.library.model.Book;
+import com.example.library.model.Role;
 import com.example.library.model.User;
 import com.example.library.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,28 +24,45 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping()
-    public List<User> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
+
         return userService.getAllUsers();
     }
 
     @GetMapping(value = "/user")
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their unique identifier")
-    public User getUserById(Long id) {
-        return userService.getUserById(id);
+    public UserResponse getUserById(Long id) {
+        return userService.getUserResponseById(id);
     }
 
+    @GetMapping("/names/{name}")
+    @Operation(summary = "Get users by name", description = "Retrieve a list of users with search name")
+    public List<UserResponse> getUserByName(@PathVariable String name) {
+        return userService.getUsersByName(name);
+    }
+
+    @GetMapping("/surnames/{surname}")
+    @Operation(summary = "Get users by surname", description = "Retrieve a list of users with search surname")
+    public List<UserResponse> getUserBySurname(@PathVariable String surname) {
+        return userService.getUsersBySurname(surname);
+    }
+
+    @GetMapping("/roles/{roleName}")
+    @Operation(summary = "Get users by role name", description = "Retrieve a list of users with specific role")
+    public List<UserResponse> getUsersByRole(@PathVariable String roleName) {
+        return userService.getUsersByRole(roleName);
+    }
+
+
     @PostMapping(value = "/register")
-    public User createUser(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public UserResponse createUser(@RequestBody UserRegisterRequest userRegisterRequest) {
         return userService.saveUser(userRegisterRequest);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest updateUserRequest) {
-        if(userService.getUserById(id) == null) {
-            return ResponseEntity.notFound().build();
-        }
+    public UserResponse updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest updateUserRequest) {
         User user = userService.getUserById(id);
-        return ResponseEntity.ok(userService.updateUser(updateUserRequest, user));
+        return userService.updateUser(updateUserRequest, user);
     }
 
     @DeleteMapping("/{id}")

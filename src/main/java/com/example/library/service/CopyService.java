@@ -1,6 +1,7 @@
 package com.example.library.service;
 
 
+import com.example.library.dto.CopyResponse;
 import com.example.library.dto.CreateCopyRequest;
 import com.example.library.dto.UpdateBookRequest;
 import com.example.library.dto.UpdateCopyRequest;
@@ -26,30 +27,38 @@ public class CopyService {
     private final CopyRepository copyRepository;
     private final BookRepository bookRepository;
 
-    public List<Copy> getAllCopies() {
-        return copyRepository.findAll();
+    public List<CopyResponse> getAllCopies() {
+        List<Copy> copies = copyRepository.findAll();
+        List<CopyResponse> copiesResponse = new ArrayList<CopyResponse>();
+        for (Copy copy : copies) {
+            copiesResponse.add(DtoMapper.createCopyToCopyResponse(copy));
+        }
+        return copiesResponse;
     }
 
-    public Copy findById(Long id) {
-        Optional<Copy> copy = copyRepository.findById(id);
-        return copy.orElse(null);
+
+    public Copy getCopyById(Long id) {
+        return copyRepository.findById(id).orElse(null);
     }
 
-    public Optional<Copy> getCopyById(Long id) {
-        return copyRepository.findById(id);
+    public CopyResponse findResponseById(Long id) {
+        Copy copy = copyRepository.findById(id).orElse(null);
+        return DtoMapper.createCopyToCopyResponse(copy);
     }
 
-    public List<Copy> saveCopy(CreateCopyRequest copyRequest) {
+    public List<CopyResponse> saveCopy(CreateCopyRequest copyRequest) {
         Book book = bookRepository.findById(copyRequest.getBook()).get();
         Long count = copyRequest.getCount();
         List<Copy> copies = new ArrayList<>();
+        List<CopyResponse> copiesResponse = new ArrayList<>();
 
         while(count > 0) {
             Copy savedCopy = copyRepository.save(DtoMapper.createCopyRequestToCopy(copyRequest, book));
             copies.add(savedCopy);
+            copiesResponse.add(DtoMapper.createCopyToCopyResponse(savedCopy));
             count --;
         }
-        return copies;
+        return copiesResponse;
     }
 
 

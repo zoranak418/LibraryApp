@@ -2,6 +2,8 @@ package com.example.library.service;
 
 
 import com.example.library.dto.CreateLeaseRequest;
+import com.example.library.dto.LeaseResponse;
+import com.example.library.dto.UpdateLeaseRequest;
 import com.example.library.mapper.DtoMapper;
 import com.example.library.model.Book;
 import com.example.library.model.Copy;
@@ -14,6 +16,7 @@ import com.example.library.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,36 +30,67 @@ public class LeaseService {
     private final CopyRepository copyRepository;
     private final UserRepository userRepository;
 
-    public List<Lease> getAllLeases() {
-        return leaseRepository.findAll();
+    public List<LeaseResponse> getAllLeases() {
+        List<Lease> leases = leaseRepository.findAll();
+        List<LeaseResponse> responses = new ArrayList<LeaseResponse>();
+        for (Lease lease : leases) {
+            responses.add(DtoMapper.createLeaseToLeaseResponse(lease));
+        }
+        return responses;
     }
 
-    public Optional<Lease> getLeaseById(Long id) {
-        return leaseRepository.findById(id);
+    public Lease getById(Long id) {
+        return leaseRepository.findById(id).orElse(null);
     }
 
-    public List<Lease> getLeasesByUser(Long id) {
-        return leaseRepository.findByUser(id);
+    public LeaseResponse getLeaseById(Long id) {
+        Lease lease = leaseRepository.findById(id).orElse(null);
+        return DtoMapper.createLeaseToLeaseResponse(lease);
     }
 
-    public List<Lease> getLeasesByBook(Long id) {
-        return leaseRepository.findByBook(id); }
+    public List<LeaseResponse> getLeasesByUser(Long id) {
+        List<Lease> leases = leaseRepository.findByUser(id);
+        List<LeaseResponse> responses = new ArrayList<>();
+        for (Lease lease : leases) {
+            responses.add(DtoMapper.createLeaseToLeaseResponse(lease));
+        }
+        return responses;
+    }
 
-    public List<Lease> getLeasesByCopy(Long id) {
+    public List<LeaseResponse> getLeasesByBook(Long id) {
+        List<Lease> leases = leaseRepository.findByBook(id);
+        List<LeaseResponse> responses = new ArrayList<LeaseResponse>();
+        for (Lease lease : leases) {
+            responses.add(DtoMapper.createLeaseToLeaseResponse(lease));
+        }
+        return responses;
+    }
+
+    public List<LeaseResponse> getLeasesByCopy(Long id) {
         Copy copy = copyRepository.findById(id).orElse(null);
-        return leaseRepository.findByCopy(copy);
+        List<Lease> leases = leaseRepository.findByCopy(copy);
+        List<LeaseResponse> responses = new ArrayList<LeaseResponse>();
+        for (Lease lease : leases) {
+            responses.add(DtoMapper.createLeaseToLeaseResponse(lease));
+        }
+        return responses;
     }
 
-    public Lease saveLease(CreateLeaseRequest request) {
+    public LeaseResponse saveLease(CreateLeaseRequest request) {
         User user = userRepository.findById(request.getUser()).orElse(null);
         Copy copy = copyRepository.findById(request.getCopy()).orElse(null);
         Lease savedLease = DtoMapper.createLeaseRequestToLease(request, user, copy);
-        return leaseRepository.save(savedLease);
+        return DtoMapper.createLeaseToLeaseResponse(leaseRepository.save(savedLease));
     }
 
-    public Lease updateLease(Lease lease) {
-        //todo
-        return null;
+    public LeaseResponse updateLease(UpdateLeaseRequest updateLeaseRequest, Lease lease) {
+        if(updateLeaseRequest.getToDate() != null) {
+            lease.setToDate(updateLeaseRequest.getToDate());
+        }
+        if(updateLeaseRequest.getComments() != null) {
+            lease.setComments(updateLeaseRequest.getComments());
+        }
+        return DtoMapper.createLeaseToLeaseResponse(leaseRepository.save(lease));
     }
 
     public void deleteLeaseById(long id) {

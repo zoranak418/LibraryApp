@@ -11,13 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LeaseResponse {
-    private Long id;
-    private Date fromDate;
+public class UpdateLeaseRequest {
     private Date toDate;
     private String comments;
-    private String title;
-    private String author;
-    private Long copy;
-    private String user;
 }

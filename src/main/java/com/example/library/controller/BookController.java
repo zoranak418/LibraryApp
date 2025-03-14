@@ -1,8 +1,6 @@
 package com.example.library.controller;
 
-import com.example.library.dto.CreateBookRequest;
-import com.example.library.dto.DeleteBookResponse;
-import com.example.library.dto.UpdateBookRequest;
+import com.example.library.dto.*;
 import com.example.library.mapper.DtoMapper;
 import com.example.library.model.Book;
 import com.example.library.service.BookService;
@@ -20,45 +18,39 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public List<Book> getAllBooks() {
+    public List<BookResponse> getAllBooks() {
         return bookService.getAllBooks();
     }
 
     @GetMapping("/author/{author}")
-    public List<Book> getBooksByAuthor(@PathVariable String author) {
+    public List<BookResponse> getBooksByAuthor(@PathVariable String author) {
         return bookService.getBooksByAuthor(author);
     }
 
     @GetMapping("/title/{title}")
-    public List<Book> getBooksByTitle(@PathVariable String title) {
-       // return bookService.searchByTitle(title);
-        //todo
-        return null;
+    public List<BookResponse> getBooksByTitle(@PathVariable String title) {
+        return bookService.getBooksByTitle(title);
     }
 
     @GetMapping("/{id}")
-    public Book getBookById(@PathVariable Long id) {
+    public BookResponse getBookById(@PathVariable Long id) {
         return bookService.getBookById(id);
     }
 
     @GetMapping("/{id}/status")
-    public Long isAvailable(@PathVariable Long id) {
-
+    public BookStatusResponse isAvailable(@PathVariable Long id) {
         return bookService.howManyAvailable(id);
     }
 
     @PostMapping
-    public Book createBook(@RequestBody CreateBookRequest createBookRequest) {
+    public BookResponse createBook(@RequestBody CreateBookRequest createBookRequest) {
         return bookService.saveBook(createBookRequest);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody UpdateBookRequest updateBookRequest) {
-        if(bookService.getBookById(id) == null) {
-            return ResponseEntity.notFound().build();
-        }
-        Book book = bookService.getBookById(id);
-        return ResponseEntity.ok(bookService.updateBook(updateBookRequest, book));
+    public BookResponse updateBook(@PathVariable Long id, @RequestBody UpdateBookRequest updateBookRequest) {
+        Book book = bookService.getById(id);
+        return bookService.updateBook(updateBookRequest, book);
     }
 
     @DeleteMapping("/{id}")
@@ -70,7 +62,7 @@ public class BookController {
                     .message("Not found")
                     .build();
         }
-        Book book = bookService.getBookById(id);
+        Book book = bookService.getById(id);
         bookService.delete(id);
         return DtoMapper.deleteBookResponsetoBook(book);
     }

@@ -1,5 +1,7 @@
 package com.example.library.service;
 
+import com.example.library.dto.BookResponse;
+import com.example.library.dto.BookStatusResponse;
 import com.example.library.dto.CreateBookRequest;
 import com.example.library.dto.UpdateBookRequest;
 import com.example.library.mapper.DtoMapper;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,33 +29,66 @@ public class BookService {
     private final LeaseRepository leaseRepository;
     private final CopyRepository copyRepository;
 
-    public List<Book> getAllBooks(){
-        return bookRepository.findAll();
+    public List<BookResponse> getAllBooks(){
+        List<Book> books = bookRepository.findAll();
+        List<BookResponse> bookResponses = new ArrayList<>();
+        for (Book book : books) {
+            bookResponses.add(DtoMapper.BookToBookResponse(book));
+        }
+        return bookResponses;
     }
 
-    public Book getBookById(Long id) {
+    public BookResponse getBookById(Long id) {
+        return DtoMapper.BookToBookResponse(bookRepository.findById(id).orElse(null));
+    }
+
+    public Book getById(Long id) {
         return bookRepository.findById(id).orElse(null);
     }
 
-    public List<Book> getBooksByAuthor(String author){
-        return bookRepository.getBooksByAuthor(author);
+    public List<BookResponse> getBooksByAuthor(String author){
+        List<Book> books = bookRepository.getBooksByAuthor(author);
+        List<BookResponse> bookResponses = new ArrayList<BookResponse>();
+        for (Book book : books) {
+            bookResponses.add(DtoMapper.BookToBookResponse(book));
+        }
+        return bookResponses;
     }
 
-    public Book saveBook(CreateBookRequest createBookRequest) {
+    public List<BookResponse> getBooksByGenre(String genre){
+        List<Book> books = bookRepository.getBooksByGenre(genre);
+        List<BookResponse> bookResponses = new ArrayList<BookResponse>();
+        for (Book book : books) {
+            bookResponses.add(DtoMapper.BookToBookResponse(book));
+        }
+        return bookResponses;
+    }
+
+    public List<BookResponse> getBooksByTitle(String title){
+        List<Book> books = bookRepository.getBooksByTitle(title);
+        List<BookResponse> bookResponses = new ArrayList<BookResponse>();
+        for (Book book : books) {
+            bookResponses.add(DtoMapper.BookToBookResponse(book));
+        }
+        return bookResponses;
+    }
+
+    public BookResponse saveBook(CreateBookRequest createBookRequest) {
         Genre genre = createBookRequest.getGenre();
         Book savedBook = DtoMapper.createBookRequestToBook(createBookRequest, genre);
-        return bookRepository.save(savedBook);
+        return DtoMapper.BookToBookResponse(bookRepository.save(savedBook));
     }
 
-    public  howManyAvailable(Long id) {
+    public BookStatusResponse howManyAvailable(Long id) {
         List<Lease> leases = leaseRepository.findByBookActive(id);
         Long numOfActiveCopies = (long) leases.size();
         Long numOfCopies = (long) copyRepository.findByBookId(id).size();
-        return Long.valueOf(numOfCopies - numOfActiveCopies);
+        Book book = bookRepository.findById(id).orElse(null);
+        return DtoMapper.createBooktoBookStatusResponse(book, Long.valueOf(numOfCopies - numOfActiveCopies));
     }
 
 
-    public Book updateBook(UpdateBookRequest updateBookRequest, Book book) {
+    public BookResponse updateBook(UpdateBookRequest updateBookRequest, Book book) {
         if(updateBookRequest.getTitle() != null) {
             book.setTitle(updateBookRequest.getTitle());
         }
@@ -63,7 +99,7 @@ public class BookService {
             book.setGenre(updateBookRequest.getGenre());
         }
         bookRepository.save(book);
-        return book;
+        return DtoMapper.BookToBookResponse(book);
     }
 
     public void delete(Long id) {

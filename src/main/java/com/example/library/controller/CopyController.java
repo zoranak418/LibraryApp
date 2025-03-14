@@ -1,6 +1,7 @@
 package com.example.library.controller;
 
 
+import com.example.library.dto.CopyResponse;
 import com.example.library.dto.CreateCopyRequest;
 import com.example.library.dto.UpdateBookRequest;
 import com.example.library.dto.UpdateCopyRequest;
@@ -22,17 +23,19 @@ public class CopyController {
     private final CopyService copyService;
 
     @GetMapping
-    public List<Copy> getAllCopies() {
+    public List<CopyResponse> getAllCopies() {
+
         return copyService.getAllCopies();
     }
 
     @GetMapping("/{id}")
-    public Optional<Copy> getCopyById(@PathVariable Long id) {
-        return copyService.getCopyById(id);
+    public CopyResponse getCopyById(@PathVariable Long id) {
+        return copyService.findResponseById(id);
     }
 
+
     @PostMapping("/create")
-    public List<Copy> createCopy(@RequestBody CreateCopyRequest createCopyRequest) {
+    public List<CopyResponse> createCopy(@RequestBody CreateCopyRequest createCopyRequest) {
         return copyService.saveCopy(createCopyRequest);
     }
 

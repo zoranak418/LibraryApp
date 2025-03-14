@@ -2,6 +2,8 @@ package com.example.library.controller;
 
 
 import com.example.library.dto.CreateLeaseRequest;
+import com.example.library.dto.LeaseResponse;
+import com.example.library.dto.UpdateLeaseRequest;
 import com.example.library.model.Book;
 import com.example.library.model.Lease;
 import com.example.library.model.User;
@@ -21,35 +23,39 @@ public class LeaseController {
     private  final UserService userService;
 
     @GetMapping
-    public List<Lease> getAllLeases() {
+    public List<LeaseResponse> getAllLeases() {
         return leaseService.getAllLeases();
     }
 
     @GetMapping("/{id}")
-    public Lease getLeaseById(@PathVariable Long id) {
-        Optional<Lease> lease = leaseService.getLeaseById(id);
-        return lease.orElse(null);
+    public LeaseResponse getLeaseById(@PathVariable Long id) {
+        return leaseService.getLeaseById(id);
     }
 
     @GetMapping("/copies/{id}")
-    public List<Lease> getLeaseByCopyId(@PathVariable Long id) {
+    public List<LeaseResponse> getLeaseByCopyId(@PathVariable Long id) {
         return leaseService.getLeasesByCopy(id);
     }
 
     @GetMapping("/users/{id}")
-    public List<Lease> getLeaseByUser(@PathVariable Long id) {
-        List<Lease> leases = leaseService.getLeasesByUser(id);
-        return leases;
+    public List<LeaseResponse> getLeaseByUser(@PathVariable Long id) {
+        return leaseService.getLeasesByUser(id);
     }
 
     @GetMapping("/books/{id}")
-    public List<Lease> getLeasesByBook(@PathVariable Long id) {
+    public List<LeaseResponse> getLeasesByBook(@PathVariable Long id) {
         return leaseService.getLeasesByBook(id);
     }
 
     @PostMapping("/create")
-    public Lease createLease(@RequestBody CreateLeaseRequest request) {
+    public LeaseResponse createLease(@RequestBody CreateLeaseRequest request) {
         return leaseService.saveLease(request);
+    }
+
+    @PutMapping("/{id}")
+    public LeaseResponse updateLease(@PathVariable Long id, @RequestBody UpdateLeaseRequest request) {
+        Lease lease = leaseService.getById(id);
+        return leaseService.updateLease(request, lease);
     }
 
 
