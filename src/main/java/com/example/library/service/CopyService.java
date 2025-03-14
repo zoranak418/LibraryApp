@@ -8,8 +8,10 @@ import com.example.library.dto.UpdateCopyRequest;
 import com.example.library.mapper.DtoMapper;
 import com.example.library.model.Book;
 import com.example.library.model.Copy;
+import com.example.library.model.Lease;
 import com.example.library.repository.BookRepository;
 import com.example.library.repository.CopyRepository;
+import com.example.library.repository.LeaseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ import java.util.Optional;
 public class CopyService {
     private final CopyRepository copyRepository;
     private final BookRepository bookRepository;
+    private final LeaseService leaseService;
+    private final LeaseRepository leaseRepository;
 
     public List<CopyResponse> getAllCopies() {
         List<Copy> copies = copyRepository.findAll();
@@ -44,6 +48,13 @@ public class CopyService {
     public CopyResponse findResponseById(Long id) {
         Copy copy = copyRepository.findById(id).orElse(null);
         return DtoMapper.createCopyToCopyResponse(copy);
+    }
+
+    public Boolean isAvailable(Long id) {
+        Lease lease = leaseRepository.getLeaseByCopyId(id);
+        if (lease == null)
+            return true;
+        return false;
     }
 
     public List<CopyResponse> saveCopy(CreateCopyRequest copyRequest) {

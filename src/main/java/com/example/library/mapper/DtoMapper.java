@@ -68,6 +68,7 @@ public class DtoMapper {
         return Lease.builder()
                 .fromDate(createLeaseRequest.getFromDate())
                 .toDate(createLeaseRequest.getToDate())
+                .comments(createLeaseRequest.getComments())
                 .copy(copy)
                 .user(user)
                 .build();

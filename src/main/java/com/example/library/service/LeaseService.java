@@ -26,6 +26,7 @@ public class LeaseService {
 
     private final LeaseRepository leaseRepository;
     private final BookRepository bookRepository;
+    private final BookService bookService;
     private final UserService userService;
     private final CopyRepository copyRepository;
     private final UserRepository userRepository;
@@ -79,6 +80,11 @@ public class LeaseService {
     public LeaseResponse saveLease(CreateLeaseRequest request) {
         User user = userRepository.findById(request.getUser()).orElse(null);
         Copy copy = copyRepository.findById(request.getCopy()).orElse(null);
+        Long available = bookService.howManyAvailableLong(copy.getBook().getId().longValue());
+        if(available <= 0) {
+            return null;
+            //todo exceptions 
+        }
         Lease savedLease = DtoMapper.createLeaseRequestToLease(request, user, copy);
         return DtoMapper.createLeaseToLeaseResponse(leaseRepository.save(savedLease));
     }

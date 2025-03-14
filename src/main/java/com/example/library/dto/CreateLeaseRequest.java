@@ -17,6 +17,7 @@ public class CreateLeaseRequest {
 
     private Date fromDate;
     private Date toDate;
+    private String comments;
     private Long copy;
     private Long user;
 }

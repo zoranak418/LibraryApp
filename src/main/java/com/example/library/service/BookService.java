@@ -87,6 +87,12 @@ public class BookService {
         return DtoMapper.createBooktoBookStatusResponse(book, Long.valueOf(numOfCopies - numOfActiveCopies));
     }
 
+    public Long howManyAvailableLong(Long id) {
+        List<Lease> leases = leaseRepository.findByBookActive(id);
+        Long numOfActiveCopies = (long) leases.size();
+        Long numOfCopies = (long) copyRepository.findByBookId(id).size();
+        return numOfCopies - numOfActiveCopies;
+    }
 
     public BookResponse updateBook(UpdateBookRequest updateBookRequest, Book book) {
         if(updateBookRequest.getTitle() != null) {
